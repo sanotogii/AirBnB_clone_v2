@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """ Console Module """
 import cmd
 import sys
@@ -137,7 +138,9 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args[0] not in HBNBCommand.classes:
+        
+        class_name = args[0]
+        if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
@@ -156,10 +159,10 @@ class HBNBCommand(cmd.Cmd):
                 params[key] = value
 
             except ValueError:
-                # Whatever the error code is
-                pass
+                print(f"Invalid argument format: {arg}")
 
-        new_instance = HBNBCommand.classes[args]()
+        # Create an instance of the class with the provided parameters
+        new_instance = HBNBCommand.classes[class_name](**params)
         storage.save()
         print(new_instance.id)
         storage.save()
