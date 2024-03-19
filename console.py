@@ -21,11 +21,9 @@ class HBNBCommand(cmd.Cmd):
     # determines prompt for interactive/non-interactive modes
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
-    classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+    classes = ["BaseModel", "User", "Place", "State", "City",
+               "Amenity", "Review"]
+
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
              'number_rooms': int, 'number_bathrooms': int,
@@ -131,41 +129,73 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
 
-    def do_create(self, args):
-        """
-        Create an object of any class
-        """
-        if not args:
+    def do_create(self, arg):
+        """Creates a new instance of BaseModel"""
+        if not arg:
             print("** class name missing **")
             return
         
-        class_name = args[0]
-        if class_name not in HBNBCommand.classes:
+        
+
+        elif arg[0] not in self.classes:
             print("** class doesn't exist **")
             return
 
-        params = {}
-        for arg in args[1:]:
-            try:
-                key, value = arg.split('=')
-                # Process the value based on its syntax
-                if not (value.startswith('"') and not value.endswith('"')):
-                    value = f'"{value}"'
-                    value = value.replace(' ', '_')
-                elif '.' in value:
-                    value = float(value)
-                else:
-                    value = int(value)
-                params[key] = value
-
-            except ValueError:
-                print(f"Invalid argument format: {arg}")
-
-        # Create an instance of the class with the provided parameters
-        new_instance = HBNBCommand.classes[class_name](**params)
-        storage.save()
+        new_instance = eval(arg)()
+        # new_instance.save()
         print(new_instance.id)
-        storage.save()
+
+    # def do_create(self, args):
+
+    #     """
+    #     Create an object of any class
+    #     """
+        
+    #     if not args:
+    #         print("** class name missing **")
+    #         return
+
+    #     arguments = args.split(' ')
+    #     class_name = args[0]
+    #     print(arguments)
+        
+    #     if class_name not in HBNBCommand.classes[class_name]:
+    #         print("** class doesn't exist **")
+    #         return
+
+    #     if len(args) > 1:
+            
+    #         params = {}
+    #         for arg in args[2:]:
+
+    #             try:
+    #                 key, value = arg.split('=')
+    #                 # Process the value based on its syntax
+    #                 if not (value.startswith('"') and value.endswith('"')):
+    #                     value = f'"{value}"'
+    #                     value = value.replace(' ', '_')
+    #                 elif '.' in value:
+    #                     value = float(value)
+    #                 else:
+    #                     value = int(value)
+    #                 params[key] = value
+
+    #             except ValueError:
+    #                 print(f"Invalid argument format: {arg}")
+    #                 return
+
+    #         # Create an instance of the class with the provided parameters
+    #         new_instance = HBNBCommand.classes[class_name](**params)
+    #         storage.save()
+    #         print(new_instance.id)
+    #         storage.save()
+
+    #     else:
+    #         new_instance = HBNBCommand.classes[class_name]()
+    #         storage.save()
+    #         print(new_instance.id)
+    #         storage.save()
+
 
     def help_create(self):
         """
