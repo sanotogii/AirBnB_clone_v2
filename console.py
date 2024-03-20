@@ -152,8 +152,7 @@ class HBNBCommand(cmd.Cmd):
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        
-        print(class_name, arguments)
+
         # Test create Place bro="pie" name="My little house"
         # Test create State name="California"
         # cat test_params_create | ./console.py
@@ -181,8 +180,6 @@ class HBNBCommand(cmd.Cmd):
                     return
 
                 kwargs[key] = value
-
-            print(kwargs)
 
             # Create an instance of the class with the provided parameters
             new_instance = HBNBCommand.classes[class_name](**kwargs)
