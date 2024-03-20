@@ -132,37 +132,36 @@ class HBNBCommand(cmd.Cmd):
         """
         pass
 
-
-    def do_create(self, args):
+    def do_create(self, arg):
 
         """
         Create an object of any class
         """
-        
-        if not args:
+
+        if not arg:
             print("** class name missing **")
             return
 
-        arguments = args.split(' ')
+        arguments = arg.split(' ')
         class_name = arguments[0]
-        
+
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
         if len(arguments) > 1:
-            
-            params = {}
-            for kv in arguments[1:]:
+
+            kwargs = {}
+            for param in arguments[1:]:
 
                 try:
-                    key, value = kv.split('=')
+                    key, value = param.split('=')
                     # Process the value based on its syntax
 
                     if (value.startswith('"')):
-                        
-                        if '"' in value:
-                            value = value.replace('"', '\\"')
+
+                        if '"' in value[1:-1]:
+                            value = value.replace('"', '\"')
 
                         if ' ' in value:
                             value = value.replace(' ', '_')
@@ -173,25 +172,20 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         value = int(value)
 
+                    kwargs[key] = value
+
                 except ValueError:
                     print(f"Invalid argument format: {arguments}")
                     return
-                
-            params[key] = value
-            print(params)
 
             # Create an instance of the class with the provided parameters
-            new_instance = HBNBCommand.classes[class_name](**params)
-            storage.save()
+            new_instance = HBNBCommand.classes[class_name](**kwargs)
+            storage.new(new_instance)
             print(new_instance.id)
-            storage.save()
 
         else:
             new_instance = HBNBCommand.classes[class_name]()
-            storage.save()
             print(new_instance.id)
-            storage.save()
-
 
     def help_create(self):
         """
