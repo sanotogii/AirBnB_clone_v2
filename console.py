@@ -142,9 +142,9 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
+        
         entry = arg.split(' ')
         class_name = entry[0]
-        print(class_name)
 
         pattern = r'(\b\w+)=(.*?(?=\s\w+=|$))'
         arguments = re.findall(pattern, arg)
@@ -152,8 +152,13 @@ class HBNBCommand(cmd.Cmd):
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
+        
+        print(class_name, arguments)
+        # Test create Place bro="pie" name="My little house"
+        # Test create State name="California"
+        # cat test_params_create | ./console.py
 
-        if len(arguments) > 1:
+        if arguments:
 
             kwargs = {}
             for key, value in arguments:
@@ -164,7 +169,6 @@ class HBNBCommand(cmd.Cmd):
 
                         if ' ' in value:
                             value = value.replace(' ', '_')
-                            print(value)
 
                     elif '.' in value:
                         value = float(value)
@@ -178,10 +182,11 @@ class HBNBCommand(cmd.Cmd):
 
                 kwargs[key] = value
 
+            print(kwargs)
+
             # Create an instance of the class with the provided parameters
             new_instance = HBNBCommand.classes[class_name](**kwargs)
             storage.new(new_instance)
-            storage.save()
             print(new_instance.id)
 
         else:
