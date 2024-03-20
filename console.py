@@ -11,6 +11,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -141,9 +142,12 @@ class HBNBCommand(cmd.Cmd):
         if not arg:
             print("** class name missing **")
             return
+        entry = arg.split(' ')
+        class_name = entry[0]
+        print(class_name)
 
-        arguments = arg.split(' ')
-        class_name = arguments[0]
+        pattern = r'(\b\w+)=(.*?(?=\s\w+=|$))'
+        arguments = re.findall(pattern, arg)
 
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
@@ -152,21 +156,15 @@ class HBNBCommand(cmd.Cmd):
         if len(arguments) > 1:
 
             kwargs = {}
-            for param in arguments[1:]:
+            for key, value in arguments:
 
                 try:
-                    key, value = param.split('=')
-                    # Process the value based on its syntax
-
                     if value.startswith('"') and value.endswith('"'):
-                        
-                        value = value[1:-1].replace('\\"', '"')
-
-                        if '"' in value[1:-1]:
-                            value = value.replace('"', '\\"')
+                        value = value[1:-1].replace('\\"', '')
 
                         if ' ' in value:
                             value = value.replace(' ', '_')
+                            print(value)
 
                     elif '.' in value:
                         value = float(value)
@@ -174,15 +172,16 @@ class HBNBCommand(cmd.Cmd):
                     else:
                         value = int(value)
 
-                    kwargs[key] = value
-
                 except ValueError:
                     print(f"Invalid argument format: {arguments}")
                     return
 
+                kwargs[key] = value
+
             # Create an instance of the class with the provided parameters
             new_instance = HBNBCommand.classes[class_name](**kwargs)
             storage.new(new_instance)
+            storage.save()
             print(new_instance.id)
 
         else:
