@@ -53,7 +53,6 @@ class FileStorage:
             'State': State, 'City': City, 'Amenity': Amenity,
             'Review': Review
         }
-
         try:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
@@ -62,3 +61,4 @@ class FileStorage:
                     self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass
+        
