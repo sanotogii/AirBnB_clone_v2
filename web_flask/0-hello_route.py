@@ -15,4 +15,3 @@ def home():
 if __name__ == "__main__":
     """ For when the file is run directly """
     app.run(host="0.0.0.0", port="5000")
-    
