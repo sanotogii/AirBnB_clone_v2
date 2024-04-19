@@ -18,12 +18,12 @@ def home():
     return "Hello HBNB!"
 
 @app.route("/hbnb", strict_slashes=False)
-def home():
+def hbnb():
     """
-    The home function decorated by / and unstrict slashes.
+    defines the route for hbnb
 
     Returns:
-        str: A greeting message.
+        str: HBNB
     """
     return "HBNB"
 
