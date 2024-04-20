@@ -14,6 +14,17 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.orm import Session
 import os
 
+classes = {
+    "BaseModel": BaseModel,
+    "User": User,
+    "Place": Place,
+    "State": State,
+    "City": City,
+    "Amenity": Amenity,
+    "Review": Review
+}
+"""classes: dictionary mapping class names to corresponding class objects"""
+
 
 class DBStorage:
     """ BDSTorage class """
@@ -39,23 +50,33 @@ class DBStorage:
 
     def all(self, cls=None):
         """ Return all objects or objects of a specific class """
-        from models import state, city
-        self.reload()
-        session = self.__session
-        objects = {}
+        # from models import state, city
+        # self.reload()
+        # session = self.__session
+        # objects = {}
 
-        if cls is None:
-            classes = [state.State, city.City]
-        else:
-            classes = [cls]
+        new_dict = {}
+        for a_class in classes:
+            if cls is None or cls is classes[a_class] or cls is a_class:
+                objects = self.__session.query(classes[a_class]).all()
+                for obj in objects:
+                    k = obj.__class__.__name__ + '.' + obj.id
+                    new_dict[k] = obj
 
-        for c in classes:
-            objs = session.query(c).all()
-            for obj in objs:
-                key = f"{obj.__class__.__name__}.{obj.id}"
-                objects[key] = obj
+        return (new_dict)
 
-        return objects
+        # if cls is None:
+        #     classes = [state.State, city.City]
+        # else:
+        #     classes = [cls]
+
+        # for c in classes:
+        #     objs = session.query(c).all()
+        #     for obj in objs:
+        #         key = f"{obj.__class__.__name__}.{obj.id}"
+        #         objects[key] = obj
+
+        # return objects
 
     def new(self, obj):
         """ Add new object to storage """
