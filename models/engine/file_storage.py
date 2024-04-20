@@ -23,6 +23,7 @@ classes = {
 }
 """classes: dictionary mapping class names to corresponding class objects"""
 
+
 class FileStorage:
     """ FileStorage class """
 
