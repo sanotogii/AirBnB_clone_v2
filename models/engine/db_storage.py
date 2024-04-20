@@ -13,11 +13,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 import os
 
+
 class DBStorage:
+    """ BDSTorage class """
     __engine = None
     __session = None
 
     def __init__(self):
+        """ Initialize the DBStorage """
         user = os.getenv('HBNB_MYSQL_USER')
         pwd = os.getenv('HBNB_MYSQL_PWD')
         host = os.getenv('HBNB_MYSQL_HOST')
@@ -30,6 +33,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
+        """ Return all objects or objects of a specific class """
         from models import state, city  # Import here to avoid circular import
         session = self.__session
         objects = {}
@@ -48,16 +52,20 @@ class DBStorage:
         return objects
 
     def new(self, obj):
+        """ Add new object to storage """
         self.__session.add(obj)
 
     def save(self):
+        """ Save objects to file """
         self.__session.commit()
 
     def delete(self, obj=None):
+        """ Delete an object from storage """
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
+        """Deserializes the JSON file to __objects"""
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
