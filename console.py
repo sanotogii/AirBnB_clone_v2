@@ -115,62 +115,17 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-
-        """
-        Create an object of any class
-        """
-
+        """Creates a new instance of BaseModel"""
         if not arg:
             print("** class name missing **")
             return
-        
-        entry = arg.split(' ')
-        class_name = entry[0]
-
-        pattern = r'(\b\w+)=(.*?(?=\s\w+=|$))'
-        arguments = re.findall(pattern, arg)
-
-        if class_name not in HBNBCommand.classes:
+        elif arg not in self.classes:
             print("** class doesn't exist **")
             return
 
-        # Test create Place bro="pie" name="My little house"
-        # Test create State name="California"
-        # cat test_params_create | ./console.py
-
-        if arguments:
-
-            kwargs = {}
-            for key, value in arguments:
-
-                try:
-                    if value.startswith('"') and value.endswith('"'):
-                        value = value[1:-1].replace('\\"', '')
-
-                        if ' ' in value:
-                            value = value.replace(' ', '_')
-
-                    elif '.' in value:
-                        value = float(value)
-
-                    else:
-                        value = int(value)
-
-                except ValueError:
-                    print(f"Invalid argument format: {arguments}")
-                    return
-
-                kwargs[key] = value
-
-            # Create an instance of the class with the provided parameters
-            new_instance = HBNBCommand.classes[class_name](**kwargs)
-            storage.new(new_instance)
-            storage.save()
-            print(new_instance.id)
-
-        else:
-            new_instance = HBNBCommand.classes[class_name]()
-            print(new_instance.id)
+        new_instance = eval(arg)()
+        new_instance.save()
+        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
