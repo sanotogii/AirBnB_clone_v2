@@ -32,14 +32,14 @@ class DBStorage:
         self.__engine = create_engine(
             f'mysql+mysqldb://{user}:{pwd}@{host}/{db}',
             pool_pre_ping=True
-            )
+        )
 
         if env == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """ Return all objects or objects of a specific class """
-        from models import state, city  # Import here to avoid circular import
+        from models import state, city
         session = self.__session
         objects = {}
 
@@ -75,7 +75,7 @@ class DBStorage:
         session_factory = sessionmaker(
             bind=self.__engine,
             expire_on_commit=False
-            )
+        )
         Session = scoped_session(session_factory)
         self.__session = Session()
 
@@ -84,4 +84,4 @@ class DBStorage:
         Call remove() method on the private session
         attribute (self.__session)
         """
-        self.__session.close()
+        self.__session.remove()
