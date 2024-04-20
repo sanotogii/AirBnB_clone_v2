@@ -114,38 +114,32 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """Create an object of any class"""
+        """ Create an object of any class with parameters """
         if not args:
             print("** class name missing **")
             return
 
-        args_list = args.split()
-        class_name = args_list[0]
+        class_name, *params = args.split()
+        params_dict = {}
+
+        for param in params:
+            key, value = param.split('=')
+            if value.startswith('"') and value.endswith('"'):
+                # Remove the double quotes and replace underscores with spaces
+                value = value[1:-1].replace('_', ' ')
+            elif '.' in value:
+                # Convert to float
+                value = float(value)
+            else:
+                # Convert to integer
+                value = int(value)
+            params_dict[key] = value
 
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
-        # Extract the key-value pairs from the arguments
-        kwargs = {}
-        for arg in args_list[1:]:
-            # Split each argument into key and value
-            key, value = arg.split('=')
-            # Replace underscores with spaces in the key
-            key = key.replace('_', ' ')
-            # Handle string values
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('\\"', '"')
-            # Handle float values
-            elif '.' in value:
-                value = float(value)
-            # Handle integer values
-            else:
-                value = int(value)
-            kwargs[key] = value
-
-        # Create a new instance of the class with the provided arguments
-        new_instance = HBNBCommand.classes[class_name](**kwargs)
+        new_instance = HBNBCommand.classes[class_name](**params_dict)
         storage.save()
         print(new_instance.id)
         storage.save()
