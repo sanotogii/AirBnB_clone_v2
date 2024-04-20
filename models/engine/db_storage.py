@@ -11,11 +11,13 @@ from models.amenity import Amenity
 from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import Session
 import os
 
 
 class DBStorage:
     """ BDSTorage class """
+
     __engine = None
     __session = None
 
@@ -73,6 +75,4 @@ class DBStorage:
 
     def close(self):
         """Call remove() method on the private session attribute (self.__session)"""
-        Session = sessionmaker(bind=self.__engine)
-        session = scoped_session(Session)
-        session.close()
+        self.__session.close()
