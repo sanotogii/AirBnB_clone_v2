@@ -113,36 +113,63 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
-        """ Create an object of any class with parameters """
-        if not args:
+    def do_create(self, arg):
+
+        """
+        Create an object of any class
+        """
+
+        if not arg:
             print("** class name missing **")
             return
+        
+        entry = arg.split(' ')
+        class_name = entry[0]
 
-        class_name, *params = args.split()
-        params_dict = {}
-
-        for param in params:
-            key, value = param.split('=')
-            if value.startswith('"') and value.endswith('"'):
-                # Remove the double quotes and replace underscores with spaces
-                value = value[1:-1].replace('_', ' ')
-            elif '.' in value:
-                # Convert to float
-                value = float(value)
-            else:
-                # Convert to integer
-                value = int(value)
-            params_dict[key] = value
+        pattern = r'(\b\w+)=(.*?(?=\s\w+=|$))'
+        arguments = re.findall(pattern, arg)
 
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.classes[class_name](**params_dict)
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+        # Test create Place bro="pie" name="My little house"
+        # Test create State name="California"
+        # cat test_params_create | ./console.py
+
+        if arguments:
+
+            kwargs = {}
+            for key, value in arguments:
+
+                try:
+                    if value.startswith('"') and value.endswith('"'):
+                        value = value[1:-1].replace('\\"', '')
+
+                        if ' ' in value:
+                            value = value.replace(' ', '_')
+
+                    elif '.' in value:
+                        value = float(value)
+
+                    else:
+                        value = int(value)
+
+                except ValueError:
+                    print(f"Invalid argument format: {arguments}")
+                    return
+
+                kwargs[key] = value
+
+            # Create an instance of the class with the provided parameters
+            new_instance = HBNBCommand.classes[class_name](**kwargs)
+            storage.new(new_instance)
+            storage.save()
+            print(new_instance.id)
+
+        else:
+            new_instance = HBNBCommand.classes[class_name]()
+            print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
