@@ -40,6 +40,7 @@ class DBStorage:
     def all(self, cls=None):
         """ Return all objects or objects of a specific class """
         from models import state, city
+        self.reload()
         session = self.__session
         objects = {}
 
@@ -75,7 +76,7 @@ class DBStorage:
         session_factory = sessionmaker(
             bind=self.__engine,
             expire_on_commit=False
-        )
+            )
         Session = scoped_session(session_factory)
         self.__session = Session()
 
