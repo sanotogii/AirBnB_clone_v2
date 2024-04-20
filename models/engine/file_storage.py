@@ -4,6 +4,7 @@ FileStorage module
 """
 import json
 
+
 class FileStorage:
     """ FileStorage class """
 
@@ -31,14 +32,18 @@ class FileStorage:
     def save(self):
         """ Save objects to file """
         with open(self.__file_path, mode="w", encoding="utf-8") as file:
-            json.dump({k: v.to_dict() for k, v in self.__objects.items()}, file)
+            json.dump(
+                {k: v.to_dict() for k, v in self.__objects.items()}, 
+                file)
 
     def reload(self):
         """ Reload objects from file """
         try:
             with open(self.__file_path, mode="r", encoding="utf-8") as file:
                 objs = json.load(file)
-                self.__objects = {k: eval(v["__class__"])(**v) for k, v in objs.items()}
+                self.__objects = {
+                    k: eval(v["__class__"])(**v) for k, v in objs.items()
+                    }
         except FileNotFoundError:
             pass
 
