@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from models.city import City
 import os
 
+
 class State(BaseModel, Base):
     """State Class"""
     __tablename__ = 'states'
@@ -15,7 +16,10 @@ class State(BaseModel, Base):
     if os.getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def cities(self):
-            """Getter method to return the list of City objects linked to the current State"""
+            """
+            Getter method to return the list of City objects
+            linked to the current State
+            """
             from models import storage
             cities_list = []
             for city in storage.all(City).values():
