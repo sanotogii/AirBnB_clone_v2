@@ -33,7 +33,7 @@ class FileStorage:
         """ Save objects to file """
         with open(self.__file_path, mode="w", encoding="utf-8") as file:
             json.dump(
-                {k: v.to_dict() for k, v in self.__objects.items()}, 
+                {k: v.to_dict() for k, v in self.__objects.items()},
                 file)
 
     def reload(self):
