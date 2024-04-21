@@ -14,7 +14,6 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from models import storage
-import space_handler as handleSpaces
 
 class HBNBCommand(cmd.Cmd):
 
@@ -185,18 +184,6 @@ class HBNBCommand(cmd.Cmd):
 
             new_instance.save()
             print(new_instance.id)
-
-
-
-                # k = re.findall(r'(\w+)=', kv)
-                # v = re.findall(r'=(.*)', kv)
-                # key = k[0]
-                # value = v[0]
-                # kwargs[key] = value
-                # new_instance = eval(**kwargs)
-                # new_instance.save()
-                # print(new_instance.id)
-
 
     def do_show(self, arg):
         """Prints the string representation of an instance"""
