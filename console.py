@@ -14,7 +14,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from models import storage
-
+import space_handler as handleSpaces
 
 class HBNBCommand(cmd.Cmd):
 
@@ -159,7 +159,7 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in self.classes:
             print("** class doesn't exist **")
             return
-        
+
         new_instance = eval(args[0])()
         new_instance.save()
         present_instance = new_instance
@@ -170,7 +170,18 @@ class HBNBCommand(cmd.Cmd):
             # kwargs = {}
             for kv in args[1:]:
                 k, v = kv.split('=')
-                setattr(present_instance, k, v.strip('"'))
+
+                if v.startswith('"'):
+                    v.strip('"')
+                    if '_' in v:
+                        v = v.replace('_', ' ')
+                elif '.' in v:
+                    v = float(v)
+                elif v.isdigit():
+                    v= int(v)
+
+                setattr(present_instance, k, v)
+                print(k, v)
 
             new_instance.save()
             print(new_instance.id)
@@ -282,7 +293,6 @@ class HBNBCommand(cmd.Cmd):
         obj.save()
 
 
-# Gracefully handle wrong input eg BaseModel.User, user.count
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
