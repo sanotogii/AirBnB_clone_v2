@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+import models
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
@@ -10,29 +11,36 @@ from models.amenity import Amenity
 from models.review import Review
 
 
-classes = {'BaseModel': BaseModel, 'User': User, 'Place': Place,
-           'State': State, 'City': City, 'Amenity': Amenity, 'Review': Review}
+classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 class FileStorage:
-    """This class manages storage of hbnb models in JSON format"""
+
+    """
+    This class manages storage of hbnb models in JSON format
+    """
+
     __file_path = 'file.json'
     __objects = {}
 
     def all(self, cls=None):
-        """
-        Returns a list of objects of a specified class.
-
-        Args:
-            cls (type): The class type to filter objects. Default is None.
-
-        Returns:
-            list: List of objects of the specified class, or all objects if cls is None.
-        """
-        if cls is None:
-            return list(self.__objects.values())
+        '''
+            Return the dictionary
+        '''
+        fs_objects = {}
+        if cls:
+            if type(cls) is str and cls in classes:
+                for key, val in self.__objects.items():
+                    if cls == key.split('.')[0]:
+                        fs_objects[key] = val
+            elif cls.__name__ in classes:
+                for key, val in self.__objects.items():
+                    if cls.__name__ == key.split('.')[0]:
+                        fs_objects[key] = val
         else:
-            return [obj for obj in self.__objects.values() if type(obj) == cls]
+            return self.__objects
+        return fs_objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -59,10 +67,12 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Deletes the object from file"""
-        if obj == None:
-            return
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        if key in self.__objects:
-            del self.__objects[key]
+        """
+        delete object from __objects if it's inside
+        """
+        if obj is not None:
+            key = obj.__class__.__name__ + "." + str(obj.id)
+            if key in self.__objects:
+                del self.__objects[key]
+        self.save()
         
