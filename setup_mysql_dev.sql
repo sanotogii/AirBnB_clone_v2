@@ -9,3 +9,8 @@ GRANT ALL PRIVILEGES ON hbnb_dev_db.* TO 'hbnb_dev'@'localhost';
 
 -- Grant SELECT privilege on the performance_schema database
 GRANT SELECT ON performance_schema.* TO 'hbnb_dev'@'localhost';
+
+CREATE TABLE IF NOT EXISTS hbnb_dev_db.states (
+    id VARCHAR(60) PRIMARY KEY,
+    name VARCHAR(128) NOT NULL
+);
