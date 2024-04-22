@@ -33,6 +33,10 @@ class BaseModel:
             del kwargs['__class__']
             self.__dict__.update(kwargs)
 
+            for key, value in kwargs.items():
+                if not hasattr(self, key):
+                    setattr(self, key, value)
+
     def __str__(self):
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
@@ -42,14 +46,27 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.now()
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
-        """Convert instance into dict format"""
+        """Returns a dictionary representation of the instance"""
         dictionary = {}
+
+        # Check if _sa_instance_state attribute exists before removing it
+        if hasattr(self, '_sa_instance_state'):
+            dictionary.pop('_sa_instance_state', None)
+
+        for key, value in self.__dict__.items():
+            if key != '_sa_instance_state':
+                dictionary[key] = value
         dictionary.update(self.__dict__)
         dictionary.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
+
         return dictionary
+
+    def delete(self):
+        models.storage.delete(self)
