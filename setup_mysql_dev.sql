@@ -14,3 +14,8 @@ CREATE TABLE IF NOT EXISTS hbnb_dev_db.states (
     id VARCHAR(60) PRIMARY KEY,
     name VARCHAR(128) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS hbnb_dev_db.cities (
+    id VARCHAR(60) PRIMARY KEY,
+    name VARCHAR(128) NOT NULL
+);
