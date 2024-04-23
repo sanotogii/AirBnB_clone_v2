@@ -50,23 +50,11 @@ class BaseModel:
         storage.save()
 
     def to_dict(self):
-        """Returns a dictionary representation of the instance"""
-        dictionary = {}
-
-        # Check if _sa_instance_state attribute exists before removing it
-        if hasattr(self, '_sa_instance_state'):
-            dictionary.pop('_sa_instance_state', None)
-
-        for key, value in self.__dict__.items():
-            if key != '_sa_instance_state':
-                dictionary[key] = value
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-
-        return dictionary
+        """Convert BaseModel object to dictionary."""
+        new_dict = self.__dict__.copy()
+        if '_sa_instance_state' in new_dict:
+            del new_dict['_sa_instance_state']
+        return new_dict
 
     def delete(self):
         models.storage.delete(self)
