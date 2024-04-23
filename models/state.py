@@ -10,12 +10,16 @@ class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
 
-    if models.storage_type == "db":
-        name = Column(String(128), nullable=False)
-        cities = relationship("City", backref="state", cascade="all, delete")
+    if models.storage_type != 'db':
+        @property
+        def cities(self):
+            """Getter method for cities"""
+            from models import storage
+            cities_list = []
+            all_cities = storage.all('City').values()
+            for city in all_cities:
+                if city.state_id == self.id:
+                    cities_list.append(city)
+            return cities_list
     else:
-        name = ""
-
-    def __init__(self, *args, **kwargs):
-        """initializes state"""
-        super().__init__(*args, **kwargs)
+        cities = relationship("City", backref="state", cascade="all, delete")
