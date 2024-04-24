@@ -1,7 +1,4 @@
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 storage_type = os.getenv('HBNB_TYPE_STORAGE')
 # Check if the database connection parameters are available

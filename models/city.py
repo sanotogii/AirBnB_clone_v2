@@ -3,9 +3,7 @@
 import os
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
-from dotenv import load_dotenv
 
-load_dotenv()
 
 class City(BaseModel, Base):
     """ The city class, contains state ID and name """
