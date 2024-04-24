@@ -43,8 +43,6 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = "(hbnb) "
-    classes = ["BaseModel", "User", "Place", "State", "City",
-               "Amenity", "Review"]
 
     def default(self, line):
         """Called when input command prefix is not recognized."""
@@ -56,7 +54,7 @@ class HBNBCommand(cmd.Cmd):
             method_name, arg_with_end_bracket = method_with_args.split('(')
 
             # Check if the class name exists
-            if class_name in self.classes:
+            if class_name in classes:
 
                 if len(arg_with_end_bracket) > 1:
                     # Remove the closing parenthesis
@@ -140,7 +138,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split(' ')
         if not args[0]:
             print("** class name missing **")
-        elif args[0] not in self.classes:
+        elif args[0] not in classes:
             print("** class doesn't exist **")
         else:
             matches = [
@@ -195,7 +193,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args[0] not in self.classes:
+        elif args[0] not in classes:
             print("** class doesn't exist **")
             return
         elif len(args) < 2:
@@ -217,7 +215,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args[0] not in self.classes:
+        elif args[0] not in classes:
             print("** class doesn't exist **")
             return
         elif len(args) < 2:
@@ -246,7 +244,7 @@ class HBNBCommand(cmd.Cmd):
         args = arg.split()
         all_objs = storage.all()
 
-        if args and args[0] not in self.classes:
+        if args and args[0] not in classes:
             print("** class doesn't exist **")
             return
 
@@ -260,7 +258,7 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args[0] not in self.classes:
+        elif args[0] not in classes:
             print("** class doesn't exist **")
             return
         elif len(args) < 2:
