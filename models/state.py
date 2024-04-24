@@ -9,11 +9,12 @@ import models
 
 class State(BaseModel, Base):
     """ State class """
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
-
     if models.storage_type == 'db':
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
         cities = relationship("City", backref="state")
+    else:
+        name = ""
 
     def __init__(self, *args, **kwargs):
         """initializes state"""
