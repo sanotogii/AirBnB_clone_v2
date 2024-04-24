@@ -5,12 +5,13 @@ from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models.city import City
 import os
+import models
 
 
 class State(BaseModel, Base):
     """ State class """
     """Representation of state """
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+    if models.storage_type == 'db':
         __tablename__ = 'states'
         name = Column(String(128), nullable=False)
         cities = relationship("City", backref="state")
@@ -21,7 +22,7 @@ class State(BaseModel, Base):
         """initializes state"""
         super().__init__(*args, **kwargs)
 
-    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+    if models.storage_type == 'db':
         @property
         def cities(self):
             """ Getter method for cities """
