@@ -6,6 +6,7 @@ Importing the cmd and other necessary modules
 """
 import cmd
 import re
+import models
 from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
@@ -188,29 +189,27 @@ class HBNBCommand(cmd.Cmd):
 
 
     def do_show(self, arg):
-        """Prints the string representation of an instance"""
-        args = arg.split()
-        if not args:
+        """Prints an instance as a string based on the class and id"""
+        args = shlex.split(arg)
+        if len(args) == 0:
             print("** class name missing **")
             return
-        elif args[0] not in classes:
+        if args[0] in classes:
+            if len(args) > 1:
+                key = args[0] + "." + args[1]
+                if key in models.storage.all():
+                    print(models.storage.all()[key])
+                else:
+                    print("** no instance found **")
+            else:
+                print("** instance id missing **")
+        else:
             print("** class doesn't exist **")
-            return
-        elif len(args) < 2:
-            print("** instance id missing **")
-            return
 
-        all_objs = storage.all()
-        obj_key = "{}.{}".format(args[0], args[1])
-        if obj_key not in all_objs:
-            print("** no instance found **")
-            return
-
-        print(all_objs[obj_key])
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
-        args = arg.split()
+        args = shlex.split(arg)
 
         if not args:
             print("** class name missing **")
@@ -241,7 +240,7 @@ class HBNBCommand(cmd.Cmd):
             (hbnb) all <optional class_name>
             (hbnb) <optional class_name>.all()
         """
-        args = arg.split()
+        args = shlex.split(arg)
         all_objs = storage.all()
 
         if args and args[0] not in classes:
@@ -254,7 +253,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         """Updates an instance based on the class name and id"""
-        args = arg.split()
+        args = shlex.split(arg)
         if not args:
             print("** class name missing **")
             return
