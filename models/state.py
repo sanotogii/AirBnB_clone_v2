@@ -12,7 +12,17 @@ load_dotenv()
 
 class State(BaseModel, Base):
     """ State class """
-    __tablename__ = "states"
+    """Representation of state """
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", backref="state")
+    else:
+        name = ""
+
+    def __init__(self, *args, **kwargs):
+        """initializes state"""
+        super().__init__(*args, **kwargs)
 
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         @property
@@ -24,5 +34,3 @@ class State(BaseModel, Base):
                 if city.state_id == self.id:
                     cities_list.append(city)
             return cities_list
-    else:
-        cities = relationship("City", backref="state", cascade="all, delete")
