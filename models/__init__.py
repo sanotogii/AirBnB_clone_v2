@@ -1,14 +1,25 @@
 import os
+from models.engine.db_storage import DBStorage
+from models.engine.file_storage import FileStorage
+from dotenv import load_dotenv
 
-# Check the value of the environment variable HBNB_TYPE_STORAGE
-storage_type = os.getenv('HBNB_TYPE_STORAGE')
+load_dotenv()
 
+storage_type = os.environ['HBNB_TYPE_STORAGE']
+# Check if the database connection parameters are available
 if storage_type == 'db':
-    from models.engine.db_storage import DBStorage
+    # Initialize database storage
     storage = DBStorage()
+    # Try to connect to the database
+    try:
+        storage.reload()
+    except Exception as e:
+        print(f"Error connecting to the database: {e}")
+        # If connection fails, fall back to file storage
+        storage = FileStorage()
 else:
-    from models.engine.file_storage import FileStorage
+    # If database connection parameters are not available, use file storage
     storage = FileStorage()
 
-# Load data from storage
+# Update the storage singleton instance
 storage.reload()

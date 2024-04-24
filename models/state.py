@@ -1,17 +1,20 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-import models
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from models.city import City
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
 
-    if models.storage_type != 'db':
+    if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         @property
         def cities(self):
             """ Getter method for cities """
