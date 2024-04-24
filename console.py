@@ -14,6 +14,11 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 from models import storage
+import shlex
+
+
+classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 class HBNBCommand(cmd.Cmd):
 
@@ -123,9 +128,8 @@ class HBNBCommand(cmd.Cmd):
         """Quit command to exit the program"""
         return True
 
-    def do_EOF(self, line):
+    def do_EOF(self, arg):
         """Implements EOF input."""
-        print()
         return True
 
     # aliasing the command
@@ -148,42 +152,42 @@ class HBNBCommand(cmd.Cmd):
         """Emptyline method"""
         pass
 
-    def do_create(self, arg):
+    def kv_parser(self, args):
+        kwargs = {}
+        for arg in args:
+            kv = arg.split('=', 1)
+            key = kv[0]
+            value = kv[1]
+            if value[0] == value[-1] == '"':
+                value = shlex.split(value)[0].replace('_', ' ')
+            else:
+                try:
+                    value = int(value)
+                except:
+                    try:
+                        value = float(value)
+                    except:
+                        continue
+            kwargs[key] = value
+        return kwargs
+    
 
+    def do_create(self, arg):
+        """Creates a new instance of a class"""
         args = arg.split()
-        """Creates a new instance of BaseModel"""
-        if not arg:
+        if len(args) == 0:
             print("** class name missing **")
             return
-        elif args[0] not in self.classes:
-            print("** class doesn't exist **")
-            return
-
-        new_instance = eval(args[0])()
-        new_instance.save()
-        present_instance = new_instance
-
-        if len(args) == 1:
-            print(present_instance.id)
+        if args[0] in classes:
+            kwargs = self.kv_parser(args[1:])
+            new_instance = classes[args[0]](**kwargs)
         else:
-            # kwargs = {}
-            for kv in args[1:]:
-                k, v = kv.split('=')
+            print("** class doesn't exist **")
+            return False
 
-                if v.startswith('"'):
-                    v.strip('"')
-                    if '_' in v:
-                        v = v.replace('_', ' ')
-                elif '.' in v:
-                    v = float(v)
-                elif v.isdigit():
-                    v= int(v)
+        print(new_instance.id)
+        new_instance.save()
 
-                setattr(present_instance, k, v)
-                print(k, v)
-
-            new_instance.save()
-            print(new_instance.id)
 
     def do_show(self, arg):
         """Prints the string representation of an instance"""
