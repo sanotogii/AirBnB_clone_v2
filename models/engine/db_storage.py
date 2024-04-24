@@ -10,7 +10,7 @@ from models.amenity import Amenity
 from models.review import Review
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import BaseModel, Base
+from models.base_model import Base
 from os import getenv
 
 classes = {"Amenity": Amenity, "City": City,
@@ -18,7 +18,7 @@ classes = {"Amenity": Amenity, "City": City,
 
 class DBStorage:
     """interaacts with the MySQL database"""
-    
+
     __engine = None
     __session = None
 
