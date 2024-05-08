@@ -1,4 +1,4 @@
-/usr/bin/env bash
+#!/usr/bin/env bash
 # Install nginx and create folders
 
 if ! command -v nginx &> /dev/null; then
@@ -25,3 +25,4 @@ sudo sed -i '/location \/hbnb_static {/a \        alias /data/web_static/current
 
 sudo service nginx restart
 exit 0
+
