@@ -41,6 +41,7 @@ def display_python(text='is_cool'):
     text = text.replace('_', ' ')
     return 'Python {}'.format(text)
 
+
 @app.route('/number/<n>', strict_slashes=False)
 def display_n(n: int) -> int:
     """
