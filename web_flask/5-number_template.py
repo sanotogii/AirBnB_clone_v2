@@ -50,7 +50,7 @@ def display_n(n: int) -> int:
     return '{} is a number'.format(n)
 
 
-@app.route('number_template/<int:n>')
+@app.route('number_template/<int:n>', strict_slashes=False)
 def display_html(n: int) -> int:
     """
     Displays an integer number
