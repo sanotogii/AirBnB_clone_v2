@@ -23,7 +23,6 @@ def hbnb():
     return 'HBNB'
 
 
-@app.route('/python/<text>', strict_slashes=False)
 @app.route('/c/<text>', strict_slashes=False)
 def display(text):
     """
@@ -31,6 +30,15 @@ def display(text):
     """
     text = text.replace('_', ' ')
     return 'C {}'.format(text)
+
+
+@app.route('/python/<text>', strict_slashes=False)
+def display(text):
+    """
+    Displays C followed by the value of text
+    """
+    text = text.replace('_', ' ')
+    return 'python {}'.format(text)
 
 
 if __name__ == '__main__':
