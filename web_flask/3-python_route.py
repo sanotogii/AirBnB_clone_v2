@@ -31,9 +31,9 @@ def display(text):
     text = text.replace('_', ' ')
     return 'C {}'.format(text)
 
-
+@app.route('/python/', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def display(text):
+def display_python(text='is_cool'):
     """
     Displays C followed by the value of text
     """
