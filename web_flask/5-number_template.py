@@ -55,7 +55,7 @@ def display_html(n: int) -> int:
     """
     Displays an integer number
     """
-    return '{} is a number'.format(render_template('5-number.html'))
+    return render_template('5-number.html')
 
 
 if __name__ == '__main__':
