@@ -42,7 +42,7 @@ def display_python(text='is_cool'):
     return 'Python {}'.format(text)
 
 
-@app.route('/number/<n>', strict_slashes=False)
+@app.route('/number/<int:n>', strict_slashes=False)
 def display_n(n: int) -> int:
     """
     Displays an integer number
